@@ -1,5 +1,5 @@
+const Helper = require('./helper');
 const Const = require("./const.json");
-const Helper = require("./helper.js");
 const Telegraf = require("telegraf");
 const axios = require("axios");
 const moment = require("moment");

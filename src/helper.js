@@ -1,4 +1,6 @@
-function message(data) {
+const moment = require("moment");
+
+exports.message = function(data) {
     let result = "";
 
     if (data !== null && data !== undefined) {
@@ -18,7 +20,7 @@ function message(data) {
     return result;
 }
 
-function calculate(date, time) {
+exports.calculate = function(date, time) {
     let full = date + " " + time + ":00+03";
     let formattedDate = moment(full).utc().format();
     let theevent = moment(formattedDate);
