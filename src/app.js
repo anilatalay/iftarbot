@@ -1,8 +1,9 @@
+const Const = require("./const.json");
 const Telegraf = require("telegraf");
 const axios = require("axios");
 const moment = require("moment");
 
-const bot = new Telegraf('622577217:AAEtO2WIewUubFurUW5X6_1vy9f5K58rwm8');
+const bot = new Telegraf(Const.BOT_TOKEN);
 
 bot.start(ctx => {
     ctx.reply('Hello World');
