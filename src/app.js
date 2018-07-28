@@ -5,6 +5,8 @@ const axios = require("axios");
 const moment = require("moment");
 
 const bot = new Telegraf(Const.BOT_TOKEN);
+const monosay = require('monosay').usetelegraf(Const.MONOSAY_TOKEN);
+monosay.init(bot);
 
 bot.start(ctx => {
     ctx.reply('Hello World');
