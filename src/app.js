@@ -12,7 +12,7 @@ bot.start(ctx => {
 
 bot.on("text", ctx => {
     axios
-        .get("https://ezanvakti.herokuapp.com/vakitler?ilce=9541")
+        .get(Const.API_URLS.DEFAULT_TIMES)
         .then(function (response) {
             if (response.data.length > 0) {
                 let dataDate = moment(response.data[0].MiladiTarihUzunIso8601).format("YYYY-MM-DD");
