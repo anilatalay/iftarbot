@@ -9,7 +9,30 @@ const monosay = require('monosay').usetelegraf(Const.MONOSAY_TOKEN);
 monosay.init(bot);
 
 bot.start(ctx => {
-    ctx.reply('Hello World');
+    monosay.data("Members").where("TelegramId", "==", (ctx.from.id).toString()).list(
+        function (data) {
+            if (data.data.itemCount === 0) {
+                monosay.data("Members").save({
+                        TelegramId: (ctx.from.id).toString(),
+                        UserName: ctx.from.username,
+                        Name: ctx.from.first_name,
+                        CreatedDate: new Date()
+                    },
+                    function (result) {
+                        ctx.reply("Merhaba " + ctx.from.first_name + " ✋ \nBotu kullanarak iftar saatlerini öğrenebilirsiniz.");
+                    },
+                    function (result) {
+                        ctx.reply("Database not working.");
+                    }
+                );
+            } else {
+                ctx.reply("Merhaba " + data.data.items[0].Name + " ✋ \nBotu kullanarak iftar saatlerini öğrenmeye devam edebilirsiniz.")
+            }
+        },
+        function (result) {
+            ctx.reply("Database not working.");
+        }
+    )
 });
 
 bot.on("text", ctx => {
