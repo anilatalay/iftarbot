@@ -1,0 +1,17 @@
+{
+  "name": "iftar-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "anilatalay",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "moment": "^2.22.2",
+    "monosay": "^1.0.5",
+    "telegraf": "^3.21.2"
+  }
+}
