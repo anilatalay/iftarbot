@@ -56,4 +56,94 @@ bot.on("text", ctx => {
         });
 });
 
+bot.on('location', (ctx) => {
+    let x = ctx.update.message.location.latitude.toString();
+    let y = ctx.update.message.location.longitude.toString();
+    let url = Const.API_URLS.GOOGLE_MAP_URL + x + "," + y + "&key=" + Const.API_URLS.GOOGLE_MAP_KEY;
+
+    // Geocoding API -> Enlem ve boylamdan lokasyonu alıyoruz
+    axios.get(url)
+        .then(function (response) {
+            let city = response.data.results[0]["address_components"].filter(a => a.types.indexOf("administrative_area_level_1") > -1)[0].long_name;
+            let countyName = response.data.results[0]["address_components"].filter(a => a.types.indexOf("administrative_area_level_2") > -1)[0].long_name;
+
+            if (city !== null && city !== undefined) {
+                let cityName = city.toUpperCase();
+
+                // Ezan Vakti API -> Şehirleri çekiyoruz 
+                axios.get(Const.API_URLS.CITIES)
+                    .then(function (response) {
+                        if (response.data !== null) {
+                            response.data.forEach(element => {
+                                if (element.SehirAdi === cityName) {
+                                    let cityId = element.SehirID;
+
+                                    if (cityId !== null && cityId !== undefined) {
+                                        // Ezan Vakti API -> İlçeleri çekiyoruz 
+                                        axios.get(Const.API_URLS.COUNTIES + cityId)
+                                            .then(function (response) {
+                                                let countyId = response.data[0].IlceID;
+
+                                                if (countyId !== null && countyId !== undefined) {
+                                                    // Ezan Vakti API -> Ezan saatlerini çekiyoruz 
+                                                    axios.get(Const.API_URLS.ALL_TIMES + countyId)
+                                                        .then(function (response) {
+                                                            let dataDate = moment(response.data[0].MiladiTarihUzunIso8601).format("YYYY-MM-DD");
+                                                            let dataTime = response.data[0].Aksam;
+                                                            let cal = Helper.calculate(dataDate, dataTime);
+                                                            let result = Helper.message(cal);
+
+                                                            // Bota lokasyon atanların datalarını "monosay" üstünde kayıt ediyoruz 
+                                                            monosay.data("Locations").save({
+                                                                    TelegramId: (ctx.from.id).toString(),
+                                                                    UserName: ctx.from.username,
+                                                                    City: cityName,
+                                                                    County: countyName,
+                                                                    Latitude: (x).toString(),
+                                                                    Longitude: (y).toString(),
+                                                                    CreatedDate: new Date()
+                                                                },
+                                                                function (member) {
+                                                                    console.log("Location saved");
+                                                                },
+                                                                function (result) {
+                                                                    console.log("Location not saved");
+                                                                });
+
+                                                            ctx.reply(result);
+                                                        })
+                                                        .catch(function (error) {
+                                                            console.log(error);
+                                                            ctx.reply("Bot Location API not working.");
+                                                        });
+                                                } else {
+                                                    ctx.reply("Bot Location API not working.");
+                                                }
+                                            })
+                                            .catch(function (error) {
+                                                console.log(error);
+                                                ctx.reply("Bot Location API not working.");
+                                            });
+                                    }
+                                    return;
+                                }
+                            });
+                        } else {
+                            ctx.reply("Bot Location API not working.");
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        ctx.reply("Bot Location API not working.");
+                    });
+            } else {
+                ctx.reply("Bot Location API not working.");
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+            ctx.reply("Bot Location API not working.");
+        });
+})
+
 bot.startPolling();

@@ -1,7 +1,12 @@
 {
     "BOT_TOKEN": "622577217:AAEtO2WIewUubFurUW5X6_1vy9f5K58rwm8",
     "API_URLS": {
-        "DEFAULT_TIMES": "https://ezanvakti.herokuapp.com/vakitler?ilce=9541"
+        "DEFAULT_TIMES": "https://ezanvakti.herokuapp.com/vakitler?ilce=9541",
+        "CITIES": "https://ezanvakti.herokuapp.com/sehirler?ulke=2",
+        "COUNTIES": "https://ezanvakti.herokuapp.com/ilceler?sehir=",
+        "ALL_TIMES": "https://ezanvakti.herokuapp.com/vakitler?ilce=",
+        "GOOGLE_MAP_URL": "https://maps.googleapis.com/maps/api/geocode/json?latlng=",
+        "GOOGLE_MAP_KEY": "<GOOGLE_KEY>"
     },
     "MONOSAY_TOKEN": "28dc3c736ef846c9946eb5eb4c251821"
 }
